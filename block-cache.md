@@ -52,7 +52,7 @@ The HashMap's size is **directly tied to the size of the fixed array.**
 
 ### A Concrete Example of the Workflow
 
-Let's say your cache is a fixed array of 3 entries.
+Let's say your cache is a fixed array of 2 entries.
 
 1.  **Initial State:** Array is empty. HashMap is empty.
 2.  **Read Block 100:**
@@ -71,7 +71,7 @@ Let's say your cache is a fixed array of 3 entries.
     *   Now you can overwrite `array[1]` with the data for block 300.
     *   You **insert into the HashMap:** `{ 300 : &array[1] }`.
 
-As you can see, the HashMap's size fluctuates between 0 and 3, perfectly mirroring the state of the fixed-size array.
+As you can see, the HashMap's size fluctuates between 0 and 2, perfectly mirroring the state of the fixed-size array.
 
 ### A Refinement: Linking the Array for LRU
 
