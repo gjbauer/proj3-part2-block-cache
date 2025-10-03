@@ -19,7 +19,7 @@ The use of a second HashMap. This is often called a "dirty block index" or "per-
 *   **Concept:** Maintain a separate data structure that tracks dirty blocks on a per-file basis.
 *   **Implementation:**
     *   **Key:** The file's unique identifier. In Unix/Linux, this is typically the **inode number**, not the file descriptor. (A file descriptor is a process-specific handle to an open file, while the inode is the filesystem's universal identifier for the file itself). `fsync(fd)` ultimately works on the underlying inode.
-    *   **Value:** A collection (e.g., a List, Set, or array) of pointers to the `cache_entry` structs that are dirty and belong to this file.
+    *   **Value:** A collection (e.g., a List, Set, or a Linked List) of pointers to the `cache_entry` structs that are dirty and belong to this file.
 
 ### How It Works
 
