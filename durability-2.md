@@ -1,4 +1,6 @@
-Let's think precisely about the performance problem of `fsync`. This proposed solution is a classic and very effective optimization. Let's break down the problem and the solution.
+Okay. Now, if I want a system call like 'fsync' to be effective, should I also implement a second HashMap for specific file descriptors, which take the file descriptor as a key an returns all the blocks associated with that file descriptor which are in the block cache?
+
+Excellent idea! You're thinking precisely about the performance problem of fsync. Your proposed solution is a classic and very effective optimization. Let's break down the problem and your solution.
 
 ### The Problem with a Naive `fsync` Implementation
 
