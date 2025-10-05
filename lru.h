@@ -8,7 +8,9 @@ typedef struct LRU_List
 	struct LRU_List *prev;
 } LRU_List;
 
-void push(LRU_List *list, int index);
-int pop(LRU_List *list);
+/* In this case, we push to the head of the list and pop from the tail.
+ * In the other case we can push and pop from the head. */
+void lru_push(LRU_List *list, int index);
+int lru_pop(LRU_List *list);
 
 #endif
