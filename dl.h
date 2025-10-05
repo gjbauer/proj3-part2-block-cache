@@ -5,7 +5,8 @@
 /* There is no reason in particular why our hashhap has to be the same size as our cache,
  * other than simply not having defined another macro...which we can. But, we set our indices
  * equal to our cache size in case if one file happens to take up our entire cache...unlikely
- * but certainly within the realm of possibility. */
+ * but certainly within the realm of possibility. Perhaps this should be another linked-list
+ * instead? */
 
 struct DL_LL
 {
