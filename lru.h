@@ -8,7 +8,7 @@ typedef struct LRU_List
 	struct LRU_List *prev;
 } LRU_List;
 
-void push(int index);
-int pop();
+void push(LRU_List *list, int index);
+int pop(LRU_List *list);
 
 #endif
