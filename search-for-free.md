@@ -1,4 +1,6 @@
-Now, when searching for an empty spot in the block cache, if we were to scan the fixed sized array to look for an empty spot, this would have a worst case scenario run time of O(Cache Size), but if we used a singly linked-list to store open slots in the cache, this would incur an initial startup cost of O(Cache Size) but would have a subsequent run time of O(1) for the rest of the time the filesystem is active. This is a standard and excellent optimization.
+Now, when searching for an empty spot in the block cache, if we were to scan the fixed sized array to look for an empty spot, this would have a worst case scenario run time of O(Cache Size), but if we used a singly linked-list to store open slots in the cache, this would incur an initial startup cost of O(Cache Size) but would have a subsequent run time of O(1) for the rest of the time the filesystem is active. Is this a good idea?
+
+Yes, absolutely! This is a standard and excellent optimization.
 
 *   **Scanning the Array (O(N)):** This is the naive approach. Every time you need a free slot, you have to iterate through the entire array to find one. This becomes very expensive as the cache size grows, especially under high load when eviction happens frequently.
 
