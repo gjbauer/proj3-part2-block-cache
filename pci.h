@@ -2,12 +2,12 @@
 #define PCI_H
 #include "config.h"
 
-struct PCI_LL
+typedef struct PCI_LL
 {
 	int key;
 	int index;
 	struct PCI_LL *next;
-};
+} PCI_LL;
 
 typedef struct PCI_HM
 {

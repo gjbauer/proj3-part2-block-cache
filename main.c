@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "disk.h"
 #include "lru.h"
 #include "pci.h"
@@ -10,6 +11,7 @@ int main()
 {
 	DiskInterface* disk = disk_open("my.img");
 	cache_entry_t cache[CACHE_SIZE];
+	PCI_HM *pci = malloc(sizeof(PCI_HM));
 	
 	FL_LL *list;
 	for (int i=0; i<CACHE_SIZE; i++) {
@@ -28,6 +30,7 @@ int main()
 				printf("Block to read: ");
 				scanf("%d", &block);
 				// TODO: Declare/insert cache functions
+				pci_lookup(pci, block);
 				break;
 			case 2:
 				printf("Block to write: ");
