@@ -1,8 +1,9 @@
 all:
-	clang -g -o cache_test main.c
+	clang -g -o cache_test *.c
+	dd if=/dev/zero of=my.img bs=1M count=2
 
 clean:
-	rm cache_test
+	rm cache_test my.img
 
 open:
 	gedit *.h *.c

@@ -10,6 +10,9 @@ typedef struct cache_entry_t
 	int pin_count;
 	void *page_data;
 	struct LRU_List *lru_pos;
-} cache_entry_y;
+} cache_entry_t;
+
+void*
+get_block(DiskInterface* disk, int pnum);
 
 #endif

@@ -7,7 +7,7 @@ typedef struct FL_LL
 	struct FL_LL *next;
 } FL_LL;
 
-void fl_push(FL_LL *list, int index);
-int fl_pop(FL_LL);
+FL_LL *fl_push(FL_LL *list, int index);
+FL_LL *fl_pop(FL_LL *list);
 
 #endif
