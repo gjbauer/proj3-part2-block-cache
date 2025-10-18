@@ -13,6 +13,6 @@ typedef struct cache_entry_t
 } cache_entry_t;
 
 void*
-get_block(DiskInterface* disk, int pnum);
+get_block(DiskInterface* disk, PCI_HM *hashmap, cache_entry_t *cache, int pnum);
 
 #endif

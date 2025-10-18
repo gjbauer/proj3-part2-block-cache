@@ -30,7 +30,7 @@ int main()
 				printf("Block to read: ");
 				scanf("%d", &block);
 				// TODO: Declare/insert cache functions
-				pci_lookup(pci, block);
+				get_block(disk, pci, cache, block);
 				break;
 			case 2:
 				printf("Block to write: ");

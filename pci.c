@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "pci.h"
 
 int pci_lookup(PCI_HM *hashmap, int key)
@@ -25,14 +26,14 @@ void pci_insert(PCI_HM *hashmap, int key, int index)
 	node->key = key;
 	node->index = index;
 	
-	node->next = hashmap->HashMap[key % CACHE_SIZE];
+	node->next = &hashmap->HashMap[key % CACHE_SIZE];
 	
-	hashmap->HashMap[key % CACHE_SIZE] = node;
+	hashmap->HashMap[key % CACHE_SIZE] = *node;
 }
 
 void pci_delete(PCI_HM *hashmap, int key)
 {
-	PCI_LL *curr = hashmap->HashMap[key % CACHE_SIZE];
+	PCI_LL *curr = &hashmap->HashMap[key % CACHE_SIZE];
 	PCI_LL *prev;
 	
 	while (curr!=NULL)
@@ -50,7 +51,7 @@ void pci_delete(PCI_HM *hashmap, int key)
 	if (prev) {
 		prev->next = curr->next;
 	} else {
-		hashmap->HashMap[key % CACHE_SIZE] = curr->next;
+		hashmap->HashMap[key % CACHE_SIZE] = *curr->next;
 	}
 	free(curr);
 }
