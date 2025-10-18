@@ -24,6 +24,7 @@ get_block(DiskInterface* disk, PCI_HM *hashmap, cache_entry_t *cache, FL_LL *fre
 		cache[index].lru_pos = lru_push(lru, index);
 		lru = cache[index].lru_pos;
 	} else {
+		// TODO: Update LRU list to place page at the front!!
 		return cache[rv].page_data;
 	}
 }
