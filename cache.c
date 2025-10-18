@@ -1,9 +1,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include "disk.h"
-#include "pci.h"
-#include "fl.h"
-#include "lru.h"
 #include "cache.h"
 
 void*
