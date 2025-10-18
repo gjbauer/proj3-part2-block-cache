@@ -23,6 +23,7 @@ get_block(DiskInterface* disk, PCI_HM *hashmap, cache_entry_t *cache, FL_LL *fre
 		memcpy(cache[index].page_data, disk_get_block(disk, pnum), BLOCK_SIZE);
 		cache[index].lru_pos = lru_push(lru, index);
 		lru = cache[index].lru_pos;
+		pci_insert(hashmap, pnum, index);
 		return cache[rv].page_data;
 	} else {
 		// TODO: Update LRU list to place page at the front!!
