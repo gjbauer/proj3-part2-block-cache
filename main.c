@@ -12,11 +12,12 @@ int main()
 	DiskInterface* disk = disk_open("my.img");
 	cache_entry_t cache[CACHE_SIZE];
 	PCI_HM *pci = malloc(sizeof(PCI_HM));
+	LRU_List *lru;
 	
 	FL_LL *list;
 	for (int i=0; i<CACHE_SIZE; i++) {
 		printf("Pushing cache index %d to free list.\n", i);
-		fl_push(list, i);
+		list = fl_push(list, i);
 	}
 	
 	// TODO: Implement functions for our data structures and test them here...
@@ -30,7 +31,7 @@ int main()
 				printf("Block to read: ");
 				scanf("%d", &block);
 				// TODO: Declare/insert cache functions
-				get_block(disk, pci, cache, block);
+				get_block(disk, pci, cache, list, lru, block);
 				break;
 			case 2:
 				printf("Block to write: ");
