@@ -13,6 +13,7 @@ get_block(DiskInterface* disk, PCI_HM *hashmap, cache_entry_t *cache, FL_LL *fre
 	if (rv==-1) {
 		if (free_list==NULL) {
 			// TODO: Evict from cache
+			//pci_delete(PCI_HM *hashmap, int key);
 		}
 		int index = free_list->index;
 		free_list = fl_pop(free_list);
