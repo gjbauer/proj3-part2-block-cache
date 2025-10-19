@@ -87,3 +87,9 @@ void dl_delete(DL_HM *hashmap, int key)
 	}
 	free(curr);
 }
+
+void dl_remove_block(DL_HM *hashmap, int key, block_number)
+{
+	//TODO: Search for block in list and remove it, if list is empty, delete the key
+	//dl_delete(hashmap, key);
+}
