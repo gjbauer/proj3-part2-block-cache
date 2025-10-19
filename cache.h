@@ -20,14 +20,21 @@ typedef struct cache_entry_t
 typedef struct cache
 {
 	// TODO: Adjust cache size based upon total system memory!!
+	int cache_size;
 	cache_entry_t cache[CACHE_SIZE];
-	PCI_HM pci;
+	PCI_HM *pci;
 	LRU_List *lru;
 	FL_LL *free_list;
 	DL_LL *dirty_list;
 } cache;
 
 void*
-get_block(DiskInterface* disk, PCI_HM *hashmap, cache_entry_t *cache, FL_LL *free_list, LRU_List *lru, int pnum);
+get_block(DiskInterface* disk, cache *cache, int pnum);
+
+cache*
+alloc_cache();
+
+void
+free_cache(cache *cache);
 
 #endif

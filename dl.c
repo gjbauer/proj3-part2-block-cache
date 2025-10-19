@@ -37,16 +37,30 @@ DL_LL *dl_lookup(DL_HM *hashmap, int key)
 	return NULL;
 }
 
+DL_LL *dl_find_block(DL_LL *list, int block_number)
+{
+	DL_LL *curr = list;
+	while (curr!=NULL)
+	{
+		if (curr->block_number == block_number) return curr;
+	}
+	
+	return NULL;
+}
+
 void dl_insert(DL_HM *hashmap, int key, int block_number)
 {
-	DL_HM_LL *node = malloc(sizeof(DL_HM_LL));
-	node->key = key;
-	dl_push(node->list, block_number);
-	// TODO: Check if key exists in HashMap first!!
+	DL_HM_LL *node = dl_lookup(hashmap, key);
+	if (node==NULL) {
+		node = malloc(sizeof(DL_HM_LL));
+		node->key = key;
 	
-	node->next = &hashmap->HashMap[key % CACHE_SIZE];
+		node->next = &hashmap->HashMap[key % CACHE_SIZE];
 	
-	hashmap->HashMap[key % CACHE_SIZE] = *node;
+		hashmap->HashMap[key % CACHE_SIZE] = *node;
+	}
+	DL_LL *entry = dl_find_block(node->list, block_number);
+	if (entry==NULL) dl_push(node->list, block_number);
 }
 
 void dl_delete(DL_HM *hashmap, int key)
