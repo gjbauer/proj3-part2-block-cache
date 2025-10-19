@@ -9,25 +9,25 @@
  * system RAM.
  */
 
-struct DL_LL
+typedef struct DL_LL
 {
 	int block_number;
 	struct DL_LL *next;
-};
+} DL_LL;
 
-struct DL_HM_LL
+typedef struct DL_HM_LL
 {
 	int key;
 	struct DL_LL *list;
 	struct DL_HM_LL *next;
-};
+} DL_HM_LL;
 
 typedef struct DL_HM
 {
 	struct DL_HM_LL HashMap[CACHE_SIZE];
 } DL_HM;
 
-int dl_lookup(DL_HM *hashmap, int key);
+DL_LL *dl_lookup(DL_HM *hashmap, int key);
 void dl_insert(DL_HM *hashmap, int key, int block_number);
 void dl_delete(DL_HM *hashmap, int key);
 
