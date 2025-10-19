@@ -7,6 +7,7 @@
 #include "pci.h"
 #include "fl.h"
 #include "lru.h"
+#include "dl.h"
 
 typedef struct cache_entry_t
 {
@@ -18,10 +19,12 @@ typedef struct cache_entry_t
 
 typedef struct cache
 {
+	// TODO: Adjust cache size based upon total system memory!!
 	cache_entry_t cache[CACHE_SIZE];
 	PCI_HM pci;
 	LRU_List *lru;
-	FL_LL *list;
+	FL_LL *free_list;
+	DL_LL *dirty_list;
 } cache;
 
 void*
