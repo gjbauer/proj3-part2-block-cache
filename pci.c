@@ -48,7 +48,7 @@ void pci_delete(PCI_HM *hashmap, uint64_t block_number)
 		}
 	}
 	
-	printf("Removing key %d from primary cache index!\n", block_number);
+	printf("Removing key %lu from primary cache index!\n", block_number);
 	if (prev) {
 		prev->next = curr->next;
 	} else {

@@ -28,7 +28,7 @@ get_block(DiskInterface* disk, cache *cache, uint64_t inum, uint64_t pnum)
 		cache->cache[index].block_number = pnum;
 		cache->cache[index].inode_number = inum;
 		cache->cache[index].page_data = malloc(BLOCK_SIZE);
-		printf("Copying page %d into the cache!\n", pnum);
+		printf("Copying page %lu into the cache!\n", pnum);
 		memcpy(cache->cache[index].page_data, disk_get_block(disk, pnum), BLOCK_SIZE);
 		cache->cache[index].lru_pos = lru_push(cache->lru, index);
 		cache->lru = cache->cache[index].lru_pos;

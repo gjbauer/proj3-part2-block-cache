@@ -80,7 +80,7 @@ void dl_delete(DL_HM *hashmap, uint64_t inode_number)
 		}
 	}
 	
-	printf("Removing inode %d from dirty list!\n", inode_number);
+	printf("Removing inode %lu from dirty list!\n", inode_number);
 	if (prev) {
 		prev->next = curr->next;
 	} else {

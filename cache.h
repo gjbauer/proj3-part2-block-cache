@@ -30,7 +30,7 @@ typedef struct cache
 	PCI_HM *pci;
 	LRU_List *lru;
 	FL_LL *free_list;
-	DL_LL *dirty_list;
+	DL_HM *dirty_list;
 } cache;
 
 void*
