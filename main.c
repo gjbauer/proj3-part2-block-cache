@@ -12,10 +12,6 @@ int main()
 	DiskInterface* disk = disk_open("my.img");
 	
 	cache *cache = alloc_cache();
-	for (int i=0; i<CACHE_SIZE; i++) {
-		printf("Pushing cache index %d to free list.\n", i);
-		cache->free_list = fl_push(cache->free_list, i);
-	}
 	
 	// TODO: Implement functions for our data structures and test them here...
 	// TODO: After testing, integrate it with our B-Tree...

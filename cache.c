@@ -2,6 +2,7 @@
 #include <string.h>
 #include "disk.h"
 #include "cache.h"
+#include "fl.h"
 
 void*
 get_block(DiskInterface* disk, cache *cache, uint64_t inum, uint64_t pnum)
@@ -59,6 +60,10 @@ cache* alloc_cache()
 	cache *cache = malloc(sizeof(cache));
 	cache->pci = malloc(sizeof(PCI_HM));
 	cache->dirty_list = malloc(sizeof(DL_HM));
+	for (int i=0; i<CACHE_SIZE; i++) {
+		printf("Pushing cache index %d to free list.\n", i);
+		cache->free_list = fl_push(cache->free_list, i);
+	}
 	return cache;
 }
 
