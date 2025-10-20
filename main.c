@@ -27,15 +27,16 @@ int main()
 			case 1:
 				printf("Block to read: ");
 				scanf("%d", &block);
-				// TODO: Declare/insert cache functions
-				get_block(disk, cache, block);
+				printf("Inode to read: ");
+				scanf("%d", &inode);
+				get_block(disk, cache, inode, block);
 				break;
 			case 2:
 				printf("Block to write: ");
 				scanf("%d", &block);
 				printf("Inode to write: ");
 				scanf("%d", &inode);
-				// TODO: Declare/insert cache functions
+				write_block(cache, "", inode, block);
 				break;
 			case 3:
 				printf("Inode to sync: ");

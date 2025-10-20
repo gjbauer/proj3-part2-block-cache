@@ -4,8 +4,8 @@
 
 typedef struct PCI_LL
 {
-	int key;
-	int index;
+	uint64_t block_number;
+	uint64_t index;
 	struct PCI_LL *next;
 } PCI_LL;
 
@@ -14,8 +14,8 @@ typedef struct PCI_HM
 	struct PCI_LL HashMap[CACHE_SIZE];
 } PCI_HM;
 
-int pci_lookup(PCI_HM *hashmap, int key);
-void pci_insert(PCI_HM *hashmap, int key, int index);
-void pci_delete(PCI_HM *hashmap, int key);
+int pci_lookup(PCI_HM *hashmap, uint64_t block_number);
+void pci_insert(PCI_HM *hashmap, uint64_t block_number, uint64_t index);
+void pci_delete(PCI_HM *hashmap, uint64_t block_number);
 
 #endif

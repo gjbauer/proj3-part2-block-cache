@@ -1,15 +1,16 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include "pci.h"
 
-int pci_lookup(PCI_HM *hashmap, int key)
+int pci_lookup(PCI_HM *hashmap, uint64_t block_number)
 {
 	PCI_LL *current;
-	int hm_index = key % CACHE_SIZE;
+	int hm_index = block_number % CACHE_SIZE;
 	current = &hashmap->HashMap[hm_index];
 	while (current!=NULL)
 	{
-		if (current->key==key)
+		if (current->block_number==block_number)
 		{
 			printf("Cache hit!\n");
 			return current->index;
@@ -20,25 +21,25 @@ int pci_lookup(PCI_HM *hashmap, int key)
 	return -1;
 }
 
-void pci_insert(PCI_HM *hashmap, int key, int index)
+void pci_insert(PCI_HM *hashmap, uint64_t block_number, uint64_t index)
 {
 	PCI_LL *node = malloc(sizeof(PCI_LL));
-	node->key = key;
+	node->block_number = block_number;
 	node->index = index;
 	
-	node->next = &hashmap->HashMap[key % CACHE_SIZE];
+	node->next = &hashmap->HashMap[block_number % CACHE_SIZE];
 	
-	hashmap->HashMap[key % CACHE_SIZE] = *node;
+	hashmap->HashMap[block_number % CACHE_SIZE] = *node;
 }
 
-void pci_delete(PCI_HM *hashmap, int key)
+void pci_delete(PCI_HM *hashmap, uint64_t block_number)
 {
-	PCI_LL *curr = &hashmap->HashMap[key % CACHE_SIZE];
+	PCI_LL *curr = &hashmap->HashMap[block_number % CACHE_SIZE];
 	PCI_LL *prev;
 	
 	while (curr!=NULL)
 	{
-		if (curr->key==key)
+		if (curr->block_number==block_number)
 		{
 			break;
 		} else {
@@ -47,11 +48,11 @@ void pci_delete(PCI_HM *hashmap, int key)
 		}
 	}
 	
-	printf("Removing key %d from primary cache index!\n", key);
+	printf("Removing key %d from primary cache index!\n", block_number);
 	if (prev) {
 		prev->next = curr->next;
 	} else {
-		hashmap->HashMap[key % CACHE_SIZE] = *curr->next;
+		hashmap->HashMap[block_number % CACHE_SIZE] = *curr->next;
 	}
 	free(curr);
 }
