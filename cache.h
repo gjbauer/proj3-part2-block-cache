@@ -10,17 +10,8 @@
 #include "lru.h"
 #include "dl.h"
 
-typedef enum {
-    BLOCK_TYPE_DATA,          // File data content
-    BLOCK_TYPE_BTREE_NODE,    // B+Tree index node
-    BLOCK_TYPE_BITMAP,        // Allocation bitmap
-    BLOCK_TYPE_INODE,         // Inode table block
-    BLOCK_TYPE_SUPER,         // Superblock
-} block_type_t;
-
 typedef struct cache_entry_t
 {
-	block_type_t block_type;
 	bool dirty_bit;
 	int pin_count;
 	uint64_t block_number;
