@@ -17,15 +17,15 @@ get_block(DiskInterface* disk, cache *cache, uint64_t inum, uint64_t pnum)
 			if (cache->cache[cache_index].dirty_bit)
 			{
 				// TODO: Write back to disk
-				memcpy(disk_get_block(disk, cache->cache[cache_index].block_number), cache->cache[cache_index].page_data, BLOCK_SIZE);
-				if (cache->cache[cache_index].block_type==BLOCK_TYPE_DATA) dl_remove_block(cache->dirty_list, cache->cache[cache_index].inode_number, cache->cache[cache_index].block_number);
+				block_type_t *block_type = (block_type_t*)cache->cache[cache_index].page_data;
+				memcpy((char*)((block_type_t*)disk_get_block(disk, cache->cache[cache_index].block_number)+1), (char*)((block_type_t*)cache->cache[cache_index].page_data+1), USABLE_BLOCK_SIZE);
+				if (block_type==BLOCK_TYPE_DATA) dl_remove_block(cache->dirty_list, cache->cache[cache_index].inode_number, cache->cache[cache_index].block_number);
 			}
 			pci_delete(cache->pci, cache->cache[cache_index].block_number);
 			cache->free_list = fl_push(cache->free_list, cache_index);
 		}
 		int index = cache->free_list->index;
 		cache->free_list = fl_pop(cache->free_list);
-		cache->cache[index].block_type = block_type;
 		cache->cache[index].dirty_bit = false;
 		cache->cache[index].pin_count = 0;
 		cache->cache[index].block_number = pnum;

@@ -17,6 +17,8 @@
  */
 #define BLOCK_SIZE 4096
 
+#define USABLE_BLOCK_SIZE 4092
+
 // ==================== B-TREE NODE CONFIGURATION ====================
 
 /**

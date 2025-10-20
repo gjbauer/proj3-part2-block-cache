@@ -13,6 +13,8 @@ int main()
 	
 	cache *cache = alloc_cache();
 	
+	printf("sizeof(block_type_t)=%lu\n", sizeof(block_type_t));
+	
 	// TODO: Implement functions for our data structures and test them here...
 	// TODO: After testing, integrate it with our B-Tree...
 	while (true) {
