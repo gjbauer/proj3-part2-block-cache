@@ -7,8 +7,7 @@
 void*
 get_block(DiskInterface* disk, cache *cache, uint64_t inum, uint64_t pnum)
 {
-	// TODO: Come up with a function that can tell which type of block it is!!
-	// TODO: Come up with a function which can do scans in our B-Tree to tell if this block is in the list!!
+	// TODO: Store the block type in the header of each block!
 	block_type_t block_type;
 	int rv = pci_lookup(cache->pci, pnum);
 	if (rv==-1) {
