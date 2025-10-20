@@ -9,6 +9,8 @@
  * our hashmap and create a function to dynamically choose a size for the cache base upon
  * system RAM.
  */
+ 
+/*=== Per-Inode Dirty List ===*/
 
 typedef struct DL_LL
 {
