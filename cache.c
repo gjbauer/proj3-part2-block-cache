@@ -12,11 +12,9 @@ get_block(DiskInterface* disk, cache *cache, uint64_t inum, uint64_t pnum)
 	int rv = pci_lookup(cache->pci, pnum);
 	if (rv==-1) {
 		if (cache->free_list==NULL) {
-			// TODO: Evict from cache
 			int cache_index = lru_pop(cache->lru);
 			if (cache->cache[cache_index].dirty_bit)
 			{
-				// TODO: Write back to disk
 				block_type_t *block_type = (block_type_t*)cache->cache[cache_index].page_data;
 				memcpy((char*)((block_type_t*)disk_get_block(disk, cache->cache[cache_index].block_number)+1), (char*)((block_type_t*)cache->cache[cache_index].page_data+1), USABLE_BLOCK_SIZE);
 				if (block_type==BLOCK_TYPE_DATA) dl_remove_block(cache->dirty_list, cache->cache[cache_index].inode_number, cache->cache[cache_index].block_number);
@@ -53,9 +51,10 @@ void
 write_block(cache *cache, void *buf, uint64_t inum, uint64_t pnum)
 {
 	int index = pci_lookup(cache->pci, pnum);
+	block_type_t *block_type = (block_type_t*)cache->cache[index].page_data;
 	memcpy(cache->cache[index].page_data, buf, BLOCK_SIZE);
 	cache->cache[index].dirty_bit = true;
-	dl_insert(cache->dirty_list, inum, pnum);
+	if (block_type==BLOCK_TYPE_DATA) dl_insert(cache->dirty_list, inum, pnum);
 }
 
 cache* alloc_cache()
@@ -72,6 +71,17 @@ cache* alloc_cache()
 
 void free_cache(cache *cache)
 {
+	for (int i=0; i<CACHE_SIZE; i++)
+	{
+		PCI_LL *list = cache->pci->HashMap[i];
+		PCI_LL *prev;
+		while (list!=NULL)
+		{
+			prev = list;
+			list = list->next;
+			free(prev);
+		}
+	}
 	free(cache->pci);
 	free(cache->dirty_list);
 	free(cache);
