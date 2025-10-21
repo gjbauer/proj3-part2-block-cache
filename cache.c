@@ -8,7 +8,6 @@
 void*
 get_block(DiskInterface* disk, cache *cache, uint64_t inum, uint64_t pnum)
 {
-	// TODO: Store the block type in the header of each block!
 	block_type_t block_type;
 	int rv = pci_lookup(cache->pci, pnum);
 	if (rv==-1) {
@@ -72,7 +71,7 @@ cache* alloc_cache()
 	cache->cache_size = cache_size;
 	cache->pci = malloc(sizeof(PCI_HM));
 	cache->dirty_list = malloc(sizeof(DL_HM));
-	for (int i=0; i<CACHE_SIZE; i++) {
+	for (int i=0; i<cache->cache_size; i++) {
 		printf("Pushing cache index %d to free list.\n", i);
 		cache->free_list = fl_push(cache->free_list, i);
 	}
@@ -81,34 +80,8 @@ cache* alloc_cache()
 
 void free_cache(cache *cache)
 {
-	for (int i=0; i<CACHE_SIZE; i++)
-	{
-		PCI_LL *list = &cache->pci->HashMap[i];
-		PCI_LL *prev;
-		while (list!=NULL)
-		{
-			prev = list;
-			list = list->next;
-			free(prev);
-		}
-	}
-	free(cache->pci);
-	for (int i=0; i<CACHE_SIZE; i++)
-	{
-		DL_HM_LL *hmlist = &cache->dirty_list->HashMap[i];
-		DL_HM_LL *prev;
-		while (hmlist!=NULL)
-		{
-			prev = hmlist;
-			hmlist = hmlist->next;
-			DL_LL *list = hmlist->list;
-			while (list!=NULL)
-			{
-				list = dl_pop(list);
-			}
-			free(prev);
-		}
-	}
 	free(cache->dirty_list);
+	free(cache->pci);
+	free(cache->cache);
 	free(cache);
 }

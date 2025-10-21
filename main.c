@@ -40,6 +40,7 @@ int main()
 				// TODO: Declare/insert cache functions
 				break;
 			default:
+				free_cache(cache);
 				return 0;  // Exit program
 		}
 	}
