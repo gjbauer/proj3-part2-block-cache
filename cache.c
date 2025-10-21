@@ -8,7 +8,6 @@
 void*
 get_block(DiskInterface* disk, cache *cache, uint64_t inum, uint64_t pnum)
 {
-	block_type_t block_type;
 	int rv = pci_lookup(cache->pci, pnum);
 	if (rv==-1) {
 		if (cache->free_list==NULL) {
