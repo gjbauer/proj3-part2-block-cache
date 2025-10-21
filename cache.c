@@ -1,8 +1,9 @@
 #include <stdlib.h>
 #include <string.h>
+#include <sys/sysinfo.h>
+#include <sys/param.h>
 #include "disk.h"
 #include "cache.h"
-#include "fl.h"
 
 void*
 get_block(DiskInterface* disk, cache *cache, uint64_t inum, uint64_t pnum)
@@ -59,7 +60,16 @@ write_block(cache *cache, void *buf, uint64_t inum, uint64_t pnum)
 
 cache* alloc_cache()
 {
+	struct sysinfo info;
+	sysinfo(&info);
+	int gb_ram = info.totalram / (1024 * 1024 * 1024);
+	int cache_size = 0;
+	if (gb_ram < 2) cache_size = (64 * 1024 * 1024) / 4096;
+	if (gb_ram > 2 && gb_ram <= 16) cache_size = info.totalram / (8 * 4096);
+	else cache_size = MIN( (2*4096*1024*1024), info.totalram / (8 * 4096));
 	cache *cache = malloc(sizeof(cache));
+	cache->cache = malloc(cache_size * BLOCK_SIZE);
+	cache->cache_size = cache_size;
 	cache->pci = malloc(sizeof(PCI_HM));
 	cache->dirty_list = malloc(sizeof(DL_HM));
 	for (int i=0; i<CACHE_SIZE; i++) {
@@ -73,7 +83,7 @@ void free_cache(cache *cache)
 {
 	for (int i=0; i<CACHE_SIZE; i++)
 	{
-		PCI_LL *list = cache->pci->HashMap[i];
+		PCI_LL *list = &cache->pci->HashMap[i];
 		PCI_LL *prev;
 		while (list!=NULL)
 		{
@@ -83,6 +93,22 @@ void free_cache(cache *cache)
 		}
 	}
 	free(cache->pci);
+	for (int i=0; i<CACHE_SIZE; i++)
+	{
+		DL_HM_LL *hmlist = &cache->dirty_list->HashMap[i];
+		DL_HM_LL *prev;
+		while (hmlist!=NULL)
+		{
+			prev = hmlist;
+			hmlist = hmlist->next;
+			DL_LL *list = hmlist->list;
+			while (list!=NULL)
+			{
+				list = dl_pop(list);
+			}
+			free(prev);
+		}
+	}
 	free(cache->dirty_list);
 	free(cache);
 }
