@@ -23,7 +23,7 @@ typedef struct cache_entry_t
 typedef struct cache
 {
 	// TODO: Adjust cache size based upon total system memory!!
-	int cache_size;
+	uint64_t cache_size;
 	cache_entry_t *cache;
 	PCI_HM *pci;
 	LRU_List *lru;

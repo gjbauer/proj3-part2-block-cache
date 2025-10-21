@@ -52,7 +52,7 @@ typedef enum {
  */
 #define MIN_KEYS (MAX_KEYS / 2)
 
-#define CACHE_SIZE 32
+#define HASHMAP_SIZE 32
 
 #endif
 

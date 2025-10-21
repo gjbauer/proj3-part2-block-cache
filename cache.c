@@ -62,10 +62,10 @@ cache* alloc_cache()
 	struct sysinfo info;
 	sysinfo(&info);
 	int gb_ram = info.totalram / (1024 * 1024 * 1024);
-	int cache_size = 0;
+	uint64_t cache_size = 0;
 	if (gb_ram < 2) cache_size = (64 * 1024 * 1024) / 4096;
-	if (gb_ram > 2 && gb_ram <= 16) cache_size = info.totalram / (8 * 4096);
-	else cache_size = MIN( (2*4096*1024*1024), info.totalram / (8 * 4096));
+	else if (gb_ram > 2 && gb_ram <= 16) cache_size = info.totalram / (8 * 4096);
+	//else cache_size = MIN( (2*4096*1024*1024), (info.totalram / (8 * 4096))); // Integer overflow
 	cache *cache = malloc(sizeof(cache));
 	cache->cache = malloc(cache_size * BLOCK_SIZE);
 	cache->cache_size = cache_size;

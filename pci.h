@@ -14,7 +14,7 @@ typedef struct PCI_LL
 
 typedef struct PCI_HM
 {
-	struct PCI_LL HashMap[CACHE_SIZE];
+	struct PCI_LL HashMap[HASHMAP_SIZE];
 } PCI_HM;
 
 int pci_lookup(PCI_HM *hashmap, uint64_t block_number);

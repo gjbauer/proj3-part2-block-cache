@@ -27,7 +27,7 @@ typedef struct DL_HM_LL
 
 typedef struct DL_HM
 {
-	struct DL_HM_LL HashMap[CACHE_SIZE];
+	struct DL_HM_LL HashMap[HASHMAP_SIZE];
 } DL_HM;
 
 DL_HM_LL *dl_lookup(DL_HM *hashmap, uint64_t inode_number);

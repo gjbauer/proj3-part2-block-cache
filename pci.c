@@ -6,7 +6,7 @@
 int pci_lookup(PCI_HM *hashmap, uint64_t block_number)
 {
 	PCI_LL *current;
-	int hm_index = block_number % CACHE_SIZE;
+	int hm_index = block_number % HASHMAP_SIZE;
 	current = &hashmap->HashMap[hm_index];
 	while (current!=NULL)
 	{
@@ -27,14 +27,14 @@ void pci_insert(PCI_HM *hashmap, uint64_t block_number, uint64_t index)
 	node->block_number = block_number;
 	node->index = index;
 	
-	node->next = &hashmap->HashMap[block_number % CACHE_SIZE];
+	node->next = &hashmap->HashMap[block_number % HASHMAP_SIZE];
 	
-	hashmap->HashMap[block_number % CACHE_SIZE] = *node;
+	hashmap->HashMap[block_number % HASHMAP_SIZE] = *node;
 }
 
 void pci_delete(PCI_HM *hashmap, uint64_t block_number)
 {
-	PCI_LL *curr = &hashmap->HashMap[block_number % CACHE_SIZE];
+	PCI_LL *curr = &hashmap->HashMap[block_number % HASHMAP_SIZE];
 	PCI_LL *prev;
 	
 	while (curr!=NULL)
@@ -52,7 +52,7 @@ void pci_delete(PCI_HM *hashmap, uint64_t block_number)
 	if (prev) {
 		prev->next = curr->next;
 	} else {
-		hashmap->HashMap[block_number % CACHE_SIZE] = *curr->next;
+		hashmap->HashMap[block_number % HASHMAP_SIZE] = *curr->next;
 	}
 	free(curr);
 }
