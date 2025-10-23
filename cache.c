@@ -70,6 +70,11 @@ cache* alloc_cache()
 	cache->cache_size = cache_size;
 	cache->pci = malloc(sizeof(PCI_HM));
 	cache->dirty_list = malloc(sizeof(DL_HM));
+	/*for (int i=0; i<HASHMAP_SIZE; i++)
+	{
+		DL_HM_LL *hmlist = &cache->dirty_list->HashMap[i];
+		hmlist->list=NULL;
+	}*/
 	for (int i=0; i<cache->cache_size; i++) {
 		printf("Pushing cache index %d to free list.\n", i);
 		cache->free_list = fl_push(cache->free_list, i);
@@ -79,7 +84,35 @@ cache* alloc_cache()
 
 void free_cache(cache *cache)
 {
+	for (int i=0; i<HASHMAP_SIZE; i++)
+	{
+		DL_HM_LL *hmlist = &cache->dirty_list->HashMap[i];
+		DL_HM_LL *prev;
+		while (hmlist!=NULL)
+		{
+			prev = hmlist;
+			DL_LL *list;
+			list = hmlist->list;
+			while (hmlist->list!=NULL)
+			{
+				list = dl_pop(list);
+			}
+			hmlist = hmlist->next;
+			if (prev!=&cache->dirty_list->HashMap[i]) free(prev);
+		}
+	}
 	free(cache->dirty_list);
+	for (int i=0; i<HASHMAP_SIZE; i++)
+	{
+		PCI_LL *list = &cache->pci->HashMap[i];
+		PCI_LL *prev;
+		while (list!=NULL)
+		{
+			prev = list;
+			list = list->next;
+			if (prev!=&cache->pci->HashMap[i]) free(prev);
+		}
+	}
 	free(cache->pci);
 	free(cache->cache);
 	free(cache);

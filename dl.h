@@ -30,6 +30,7 @@ typedef struct DL_HM
 	struct DL_HM_LL HashMap[HASHMAP_SIZE];
 } DL_HM;
 
+DL_LL *dl_pop(DL_LL *list);
 DL_HM_LL *dl_lookup(DL_HM *hashmap, uint64_t inode_number);
 void dl_insert(DL_HM *hashmap, uint64_t Inode_number, uint64_t block_number);
 void dl_remove_block(DL_HM *hashmap, uint64_t inode_number, uint64_t block_number);
