@@ -96,7 +96,6 @@ cache* alloc_cache()
 
 void free_cache(cache *cache)
 {
-	// TODO: Overwrite data before free!
 	for (int i=0; i<HASHMAP_SIZE; i++)
 	{
 		DL_HM_LL *hmlist = cache->dirty_list->HashMap[i];
