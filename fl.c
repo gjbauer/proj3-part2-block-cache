@@ -15,6 +15,7 @@ FL_LL *fl_pop(FL_LL *list)
 {
 	FL_LL *temp = list->next;
 	
+	arc4random_buf(list, sizeof(struct FL_LL));
 	free(list);
 	
 	return temp;

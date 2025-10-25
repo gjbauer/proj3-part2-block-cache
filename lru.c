@@ -36,10 +36,15 @@ int64_t lru_pop(cache *cache, LRU_List *list)
 		{
 			list->prev = list->prev->prev;
 		}
-	
+		
+		arc4random_buf(temp, sizeof(struct LRU_List));
 		free(temp);
 	}
-	else free(list);
+	else
+	{
+		arc4random_buf(list, sizeof(struct LRU_List));
+		free(list);
+	}
 	
 	cache->lru_size--;
 	

@@ -1,9 +1,9 @@
 all:
-	clang -g -o cache_test *.c
+	clang -lbsd -g -o cache_test *.c
 	dd if=/dev/zero of=my.img bs=1M count=2
 
 sanitize:
-	clang -fsanitize=address -g -o cache_test *.c
+	clang -lbsd -fsanitize=address -g -o cache_test *.c
 	dd if=/dev/zero of=my.img bs=1M count=2
 
 

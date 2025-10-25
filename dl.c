@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <bsd/stdlib.h>
 #include "dl.h"
 
 DL_LL *dl_push(DL_LL *list, uint64_t block_number)
@@ -15,6 +16,8 @@ DL_LL *dl_push(DL_LL *list, uint64_t block_number)
 DL_LL *dl_pop(DL_LL *list)
 {
 	DL_LL *temp = list->next;
+	
+	arc4random_buf(list, sizeof(struct DL_LL));
 	
 	free(list);
 	
