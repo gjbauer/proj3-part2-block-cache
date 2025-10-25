@@ -23,6 +23,7 @@ typedef struct cache_entry_t
 
 typedef struct cache
 {
+	uint64_t cache_size;
 	uint64_t lru_size;
 	cache_entry_t *cache;
 	PCI_HM *pci;

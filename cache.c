@@ -70,6 +70,7 @@ cache* alloc_cache()
 	else if (gb_ram > 2 && gb_ram <= 16) cache_size = info.totalram / (8 * 4096);
 	//else cache_size = MIN( (2*4096*1024*1024), (info.totalram / (8 * 4096))); // Integer overflow
 	cache *cache = malloc(sizeof(struct cache));
+	cache->cache_size = cache_size;
 	cache->cache = malloc(cache_size * sizeof(struct cache_entry_t));
 	for (int i=0; i<cache_size; i++)
 	{
@@ -138,6 +139,8 @@ void free_cache(cache *cache)
 	}
 	arc4random_buf(cache->pci, sizeof(struct PCI_HM));
 	free(cache->pci);
+	arc4random_buf(cache->cache, cache->cache_size * sizeof(struct cache_entry_t));
 	free(cache->cache);
+	arc4random_buf(cache, sizeof(struct cache));
 	free(cache);
 }
