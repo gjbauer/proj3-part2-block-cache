@@ -32,7 +32,7 @@ int main()
 				scanf("%d", &block);
 				printf("Inode to write: ");
 				scanf("%d", &inode);
-				write_block(cache, "", inode, block);
+				write_block(disk, cache, "", inode, block);
 				break;
 			case 3:
 				printf("Inode to sync: ");

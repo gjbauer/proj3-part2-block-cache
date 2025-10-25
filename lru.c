@@ -1,34 +1,47 @@
 #include <stdlib.h>
 #include "lru.h"
+#include "cache.h"
 
-LRU_List *lru_push(LRU_List *list, int index)
+LRU_List *lru_push(cache *cache, int index)
 {
+	LRU_List *list = cache->lru;
 	LRU_List *node = (LRU_List*)malloc(sizeof(LRU_List));
 	node->index = index;
 	
-	if (list)
+	if (cache->lru_size>0)
 	{
 		node->next = list;
 		node->prev = list->prev;
 		list->prev = node;
+		node->prev->next = node;
+	}
+	else
+	{
+		node->next = node;
+		node->prev = node;
 	}
 	
+	cache->lru_size++;
 	return node;
 }
 
-int lru_pop(LRU_List *list)
+int64_t lru_pop(cache *cache, LRU_List *list)
 {
 	int index = (list->prev) ? (list->prev->index) : (index = list->index);
 	
-	if (list->prev)
-	{	
+	if (cache->lru_size>0)
+	{
 		LRU_List *temp = list->prev;
-	
-		list->prev = list->prev->prev;
+		if (list->next!=list)
+		{
+			list->prev = list->prev->prev;
+		}
 	
 		free(temp);
 	}
 	else free(list);
+	
+	cache->lru_size--;
 	
 	return index;
 }

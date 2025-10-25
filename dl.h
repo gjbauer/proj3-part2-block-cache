@@ -27,7 +27,7 @@ typedef struct DL_HM_LL
 
 typedef struct DL_HM
 {
-	struct DL_HM_LL HashMap[HASHMAP_SIZE];
+	struct DL_HM_LL *HashMap[HASHMAP_SIZE];
 } DL_HM;
 
 DL_LL *dl_pop(DL_LL *list);

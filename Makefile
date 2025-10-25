@@ -2,6 +2,11 @@ all:
 	clang -g -o cache_test *.c
 	dd if=/dev/zero of=my.img bs=1M count=2
 
+sanitize:
+	clang -fsanitize=address -g -o cache_test *.c
+	dd if=/dev/zero of=my.img bs=1M count=2
+
+
 clean:
 	rm cache_test my.img
 

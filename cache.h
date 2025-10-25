@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include "config.h"
+#include "disk.h"
 
 #include "pci.h"
 #include "fl.h"
@@ -22,8 +23,7 @@ typedef struct cache_entry_t
 
 typedef struct cache
 {
-	// TODO: Adjust cache size based upon total system memory!!
-	uint64_t cache_size;
+	uint64_t lru_size;
 	cache_entry_t *cache;
 	PCI_HM *pci;
 	LRU_List *lru;
@@ -31,11 +31,16 @@ typedef struct cache
 	DL_HM *dirty_list;
 } cache;
 
+/* In this case, we push to the head of the list and pop from the tail.
+ * In the other case we can push and pop from the head. */
+LRU_List *lru_push(cache *cache, int index);
+int64_t lru_pop(cache *cache, LRU_List *list);
+
 void*
 get_block(DiskInterface* disk, cache *cache, uint64_t inum, uint64_t pnum);
 
 void
-write_block(cache *cache, void *buf, uint64_t inum, uint64_t pnum);
+write_block(DiskInterface* disk, cache *cache, void *buf, uint64_t inum, uint64_t pnum);
 
 cache*
 alloc_cache();
