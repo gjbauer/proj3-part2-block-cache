@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/sysinfo.h>
-//#include <sys/param.h>
+#include <sys/param.h>
 #include <bsd/stdlib.h>
 #include "disk.h"
 #include "cache.h"
@@ -68,7 +68,7 @@ cache* alloc_cache()
 	uint64_t cache_size = 0;
 	if (gb_ram < 2) cache_size = (64 * 1024 * 1024) / 4096;
 	else if (gb_ram > 2 && gb_ram <= 16) cache_size = info.totalram / (8 * 4096);
-	//else cache_size = MIN( (2*4096*1024*1024), (info.totalram / (8 * 4096))); // Integer overflow
+	else cache_size = MIN( (2*1024*1024), (info.totalram / (8 * 4096)));
 	cache *cache = malloc(sizeof(struct cache));
 	cache->cache_size = cache_size;
 	cache->cache = malloc(cache_size * sizeof(struct cache_entry_t));
