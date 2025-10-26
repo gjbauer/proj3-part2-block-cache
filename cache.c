@@ -16,7 +16,7 @@ get_block(DiskInterface* disk, cache *cache, uint64_t inum, uint64_t pnum)
 			if (cache->cache[cache_index].dirty_bit)
 			{
 				block_type_t *block_type = (block_type_t*)cache->cache[cache_index].page_data;
-				memcpy(((block_type_t*)disk_get_block(disk, cache->cache[cache_index].block_number)+1), ((block_type_t*)cache->cache[cache_index].page_data+1), USABLE_BLOCK_SIZE);
+				memcpy(disk_get_block(disk, cache->cache[cache_index].block_number), cache->cache[cache_index].page_data, BLOCK_SIZE);
 				free(cache->cache[cache_index].page_data);
 				if (block_type==BLOCK_TYPE_DATA) dl_remove_block(cache->dirty_list, cache->cache[cache_index].inode_number, cache->cache[cache_index].block_number);
 			}
