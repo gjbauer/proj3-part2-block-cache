@@ -17,6 +17,7 @@ get_block(DiskInterface* disk, cache *cache, uint64_t inum, uint64_t pnum)
 			{
 				block_type_t *block_type = (block_type_t*)cache->cache[cache_index].page_data;
 				memcpy(((block_type_t*)disk_get_block(disk, cache->cache[cache_index].block_number)+1), ((block_type_t*)cache->cache[cache_index].page_data+1), USABLE_BLOCK_SIZE);
+				free(cache->cache[cache_index].page_data);
 				if (block_type==BLOCK_TYPE_DATA) dl_remove_block(cache->dirty_list, cache->cache[cache_index].inode_number, cache->cache[cache_index].block_number);
 			}
 			pci_delete(cache->pci, cache->cache[cache_index].block_number);
@@ -48,7 +49,7 @@ get_block(DiskInterface* disk, cache *cache, uint64_t inum, uint64_t pnum)
 void
 write_block(DiskInterface* disk, cache *cache, void *buf, uint64_t inum, uint64_t pnum)
 {
-	int index = pci_lookup(cache->pci, pnum);
+	uint64_t index = pci_lookup(cache->pci, pnum);
 	if (index==-1)
 	{
 		get_block(disk, cache, inum, pnum);

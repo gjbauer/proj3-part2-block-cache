@@ -32,7 +32,8 @@ int main()
 				scanf("%d", &block);
 				printf("Inode to write: ");
 				scanf("%d", &inode);
-				write_block(disk, cache, "", inode, block);
+				void *empty = malloc(4096);
+				write_block(disk, cache, empty, inode, block);
 				break;
 			case 3:
 				printf("Inode to sync: ");
