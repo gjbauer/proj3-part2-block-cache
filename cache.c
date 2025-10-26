@@ -34,7 +34,7 @@ get_block(DiskInterface* disk, cache *cache, uint64_t inum, uint64_t pnum)
 		cache->cache[index].lru_pos = lru_push(cache, index);
 		cache->lru = cache->cache[index].lru_pos;
 		pci_insert(cache->pci, pnum, index);
-		return cache->cache[rv].page_data;
+		return cache->cache[index].page_data;
 	} else {
 		LRU_List *ptr = cache->cache[rv].lru_pos->next;
 		int index;
