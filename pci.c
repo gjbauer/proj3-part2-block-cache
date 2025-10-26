@@ -3,7 +3,7 @@
 #include <stdint.h>
 #include "pci.h"
 
-uint64_t pci_lookup(PCI_HM *hashmap, uint64_t block_number)
+int pci_lookup(PCI_HM *hashmap, uint64_t block_number)
 {
 	PCI_LL *current;
 	int hm_index = block_number % HASHMAP_SIZE;

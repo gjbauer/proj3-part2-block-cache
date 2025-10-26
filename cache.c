@@ -49,7 +49,7 @@ get_block(DiskInterface* disk, cache *cache, uint64_t inum, uint64_t pnum)
 void
 write_block(DiskInterface* disk, cache *cache, void *buf, uint64_t inum, uint64_t pnum)
 {
-	uint64_t index = pci_lookup(cache->pci, pnum);
+	int index = pci_lookup(cache->pci, pnum);
 	if (index==-1)
 	{
 		get_block(disk, cache, inum, pnum);
