@@ -27,8 +27,7 @@ DL_LL *dl_pop(DL_LL *list)
 DL_HM_LL *dl_lookup(DL_HM *hashmap, uint64_t inode_number)
 {
 	DL_HM_LL *current;
-	int hm_index = inode_number % HASHMAP_SIZE;
-	current = hashmap->HashMap[hm_index];
+	current = hashmap->HashMap[inode_number % HASHMAP_SIZE];
 	while (current!=NULL)
 	{
 		if (current->inode_number==inode_number)
@@ -89,6 +88,7 @@ void dl_delete(DL_HM *hashmap, uint64_t inode_number)
 	} else {
 		hashmap->HashMap[inode_number % HASHMAP_SIZE] = curr->next;
 	}
+	arc4random_buf(curr, sizeof(struct DL_HM_LL));
 	free(curr);
 }
 

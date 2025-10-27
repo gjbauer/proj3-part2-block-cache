@@ -58,20 +58,15 @@ write_block(DiskInterface* disk, cache *cache, void *buf, uint64_t inum, uint64_
 	block_type_t *block_type = (block_type_t*)cache->cache[index].page_data;
 	memcpy(cache->cache[index].page_data, buf, BLOCK_SIZE);
 	cache->cache[index].dirty_bit = true;
-	if (block_type==BLOCK_TYPE_DATA) dl_insert(cache->dirty_list, inum, pnum);
+	/*if (block_type==BLOCK_TYPE_DATA)*/ dl_insert(cache->dirty_list, inum, pnum);
 }
 
 void cache_fsync(DiskInterface* disk, cache *cache, uint64_t inum)
 {
-	DL_HM_LL *hmlist = cache->dirty_list->HashMap[inum % HASHMAP_SIZE];
+	DL_HM_LL *hmlist = dl_lookup(cache->dirty_list, inum);
 	DL_HM_LL *prev;
 	if (hmlist)
 	{
-		while (hmlist->inode_number!=inum)
-		{
-			prev = hmlist;
-			hmlist = hmlist->next;
-		}
 		DL_LL *list;
 		list = hmlist->list;
 		while (list)
@@ -81,9 +76,7 @@ void cache_fsync(DiskInterface* disk, cache *cache, uint64_t inum)
 			cache->cache[index].dirty_bit=false;
 			list = dl_pop(list);
 		}
-		if (prev) prev->next = hmlist->next;
-		arc4random_buf(hmlist, sizeof(struct DL_HM_LL));
-		free(hmlist);
+		dl_delete(cache->dirty_list, inum);
 	}
 }
 
