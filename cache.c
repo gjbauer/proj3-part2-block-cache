@@ -110,6 +110,10 @@ cache* alloc_cache()
 	cache *cache = malloc(sizeof(struct cache));
 	cache->cache_size = cache_size;
 	cache->cache = malloc(cache_size * sizeof(struct cache_entry_t));
+	for (int i=0; i<cache->cache_size; i++)
+	{
+		cache->cache[i].page_data=NULL;
+	}
 	for (int i=0; i<cache_size; i++)
 	{
 		cache->cache[i].dirty_bit = false;
@@ -131,6 +135,8 @@ cache* alloc_cache()
 		printf("Pushing cache index %d to free list.\n", i);
 		cache->free_list = fl_push(cache->free_list, i);
 	}
+	cache->lru=NULL;
+	cache->gdl=NULL;
 	return cache;
 }
 
@@ -140,18 +146,27 @@ void free_cache(cache *cache)
 	{
 		gdl_pop(cache, cache->gdl);
 	}
+	for (int i=cache->lru_size; i>0; i--)
+	{
+		lru_pop(cache, cache->lru);
+	}
+	while (cache->free_list!=NULL)
+	{
+		printf("Popping cache index %d from free list.\n", cache->free_list->index);
+		cache->free_list = fl_pop(cache->free_list);
+	}
 	for (int i=0; i<HASHMAP_SIZE; i++)
 	{
 		DL_HM_LL *hmlist = cache->dirty_list->HashMap[i];
 		DL_HM_LL *prev;
-		while (hmlist!=NULL)
+		while (hmlist)
 		{
 			prev = hmlist;
-			DL_LL *list;
-			list = hmlist->list;
+			DL_LL *list = hmlist->list;
 			while (list)
 			{
 				list = dl_pop(list);
+				hmlist->list = list;
 			}
 			hmlist = hmlist->next;
 			arc4random_buf(prev, sizeof(struct DL_HM_LL));
@@ -160,15 +175,6 @@ void free_cache(cache *cache)
 	}
 	arc4random_buf(cache->dirty_list, sizeof(struct DL_HM));
 	free(cache->dirty_list);
-	while (cache->free_list!=NULL)
-	{
-		printf("Popping cache index %d from free list.\n", cache->free_list->index);
-		cache->free_list = fl_pop(cache->free_list);
-	}
-	for (int i=cache->lru_size; i>0; i--)
-	{
-		lru_pop(cache, cache->lru);
-	}
 	for (int i=0; i<HASHMAP_SIZE; i++)
 	{
 		PCI_LL *prev;
@@ -182,6 +188,14 @@ void free_cache(cache *cache)
 	}
 	arc4random_buf(cache->pci, sizeof(struct PCI_HM));
 	free(cache->pci);
+	for (int i=0; i<cache->cache_size; i++)
+	{
+		if (cache->cache[i].page_data)
+		{
+			arc4random_buf(cache->cache[i].page_data, BLOCK_SIZE);
+			free(cache->cache[i].page_data);
+		}
+	}
 	arc4random_buf(cache->cache, cache->cache_size * sizeof(struct cache_entry_t));
 	free(cache->cache);
 	arc4random_buf(cache, sizeof(struct cache));

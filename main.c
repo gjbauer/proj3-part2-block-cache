@@ -34,6 +34,7 @@ int main()
 				scanf("%d", &inode);
 				void *empty = malloc(4096);
 				write_block(disk, cache, empty, inode, block);
+				free(empty);
 				break;
 			case 3:
 				printf("Inode to sync: ");
@@ -45,6 +46,7 @@ int main()
 				break;
 			default:
 				free_cache(cache);
+				disk_close(disk);
 				return 0;  // Exit program
 		}
 	}

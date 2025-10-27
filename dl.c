@@ -15,8 +15,7 @@ DL_LL *dl_push(DL_LL *list, uint64_t block_number)
 
 DL_LL *dl_pop(DL_LL *list)
 {
-	DL_LL *temp=NULL;
-	if (list!=NULL) temp = list->next;
+	DL_LL *temp = list->next;
 	
 	arc4random_buf(list, sizeof(struct DL_LL));
 	
@@ -29,7 +28,7 @@ DL_HM_LL *dl_lookup(DL_HM *hashmap, uint64_t inode_number)
 {
 	DL_HM_LL *current;
 	current = hashmap->HashMap[inode_number % HASHMAP_SIZE];
-	while (current!=NULL)
+	while (current)
 	{
 		if (current->inode_number==inode_number)
 		{
@@ -43,7 +42,7 @@ DL_HM_LL *dl_lookup(DL_HM *hashmap, uint64_t inode_number)
 DL_LL *dl_find_block(DL_LL *list, uint64_t block_number)
 {
 	DL_LL *curr = list;
-	while (curr!=NULL)
+	while (curr)
 	{
 		if (curr->block_number == block_number) return curr;
 		curr=curr->next;
@@ -55,20 +54,21 @@ DL_LL *dl_find_block(DL_LL *list, uint64_t block_number)
 void dl_insert(DL_HM *hashmap, uint64_t inode_number, uint64_t block_number)
 {
 	DL_HM_LL *node = dl_lookup(hashmap, inode_number);
-	if (node==NULL) {
+	if (!node) {
 		node = malloc(sizeof(DL_HM_LL));
 		node->inode_number = inode_number;
+		node->list=NULL;
 		
 		node->next = hashmap->HashMap[inode_number % HASHMAP_SIZE];
 		
 		hashmap->HashMap[inode_number % HASHMAP_SIZE] = node;
 		
-		dl_push(node->list, block_number);
+		node->list = dl_push(node->list, block_number);
 	}
 	else
 	{
 		DL_LL *entry = dl_find_block(node->list, block_number);
-		if (entry==NULL) dl_push(node->list, block_number);
+		if (!entry) node->list = dl_push(node->list, block_number);
 	}
 }
 
@@ -77,7 +77,7 @@ void dl_delete(DL_HM *hashmap, uint64_t inode_number)
 	DL_HM_LL *curr = hashmap->HashMap[inode_number % HASHMAP_SIZE];
 	DL_HM_LL *prev;
 	
-	while (curr!=NULL)
+	while (curr)
 	{
 		if (curr->inode_number==inode_number)
 		{
@@ -105,7 +105,7 @@ void dl_remove_block(DL_HM *hashmap, uint64_t inode_number, uint64_t block_numbe
 	{
 		DL_LL *curr = list->list;
 		DL_LL *prev=NULL;
-		while (curr!=NULL)
+		while (curr)
 		{
 			if (curr->block_number == block_number) break;
 			prev=curr;
