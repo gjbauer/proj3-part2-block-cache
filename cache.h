@@ -33,7 +33,7 @@ typedef struct cache
 	LRU_List *lru;
 	FL_LL *free_list;
 	DL_HM *dirty_list;
-	struct GDL *gdl;
+	GDL *gdl;
 } cache;
 
 /* In this case, we push to the head of the list and pop from the tail.

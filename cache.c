@@ -58,7 +58,7 @@ write_block(DiskInterface* disk, cache *cache, void *buf, uint64_t inum, uint64_
 	block_type_t *block_type = (block_type_t*)cache->cache[index].page_data;
 	memcpy(cache->cache[index].page_data, buf, BLOCK_SIZE);
 	cache->cache[index].dirty_bit = true;
-	/*if (block_type==BLOCK_TYPE_DATA)*/ dl_insert(cache->dirty_list, inum, pnum);
+	if (block_type==BLOCK_TYPE_DATA) dl_insert(cache->dirty_list, inum, pnum);
 	cache->gdl = gdl_push(cache, index);
 }
 
