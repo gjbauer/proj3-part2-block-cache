@@ -16,7 +16,7 @@ int main()
 	// TODO: Implement functions for our data structures and test them here...
 	// TODO: After testing, integrate it with our B-Tree...
 	while (true) {
-		printf("Select:\n(1) to simulate read\n(2) to simulate write\n(3) to simulate fsync\n> ");
+		printf("Select:\n(1) to simulate read\n(2) to simulate write\n(3) to simulate fsync\n(4) to simulate sync\n> ");
 		int choice, block, inode;
 		scanf("%d", &choice);
 		switch (choice) {
@@ -39,6 +39,9 @@ int main()
 				printf("Inode to sync: ");
 				scanf("%d", &inode);
 				cache_fsync(disk, cache, inode);
+				break;
+			case 4:
+				cache_sync(disk, cache);
 				break;
 			default:
 				free_cache(cache);

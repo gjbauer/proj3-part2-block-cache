@@ -59,6 +59,7 @@ write_block(DiskInterface* disk, cache *cache, void *buf, uint64_t inum, uint64_
 	memcpy(cache->cache[index].page_data, buf, BLOCK_SIZE);
 	cache->cache[index].dirty_bit = true;
 	/*if (block_type==BLOCK_TYPE_DATA)*/ dl_insert(cache->dirty_list, inum, pnum);
+	cache->gdl = gdl_push(cache, index);
 }
 
 void cache_fsync(DiskInterface* disk, cache *cache, uint64_t inum)
@@ -75,8 +76,23 @@ void cache_fsync(DiskInterface* disk, cache *cache, uint64_t inum)
 			memcpy(disk_get_block(disk, cache->cache[index].block_number), cache->cache[index].page_data, BLOCK_SIZE);
 			cache->cache[index].dirty_bit=false;
 			list = dl_pop(list);
+			gdl_pop(cache, cache->cache[index].gdl_pos);
 		}
 		dl_delete(cache->dirty_list, inum);
+	}
+}
+
+void cache_sync(DiskInterface* disk, cache *cache)
+{
+	GDL *curr = cache->gdl;
+	while (curr!=NULL)
+	{
+		int index = cache->gdl->index;
+		memcpy(disk_get_block(disk, cache->cache[index].block_number), cache->cache[index].page_data, BLOCK_SIZE);
+		curr=curr->next;
+		gdl_pop(cache, cache->gdl);
+		cache->cache[index].dirty_bit=false;
+		cache->cache[index].gdl_pos=NULL;
 	}
 }
 
@@ -97,6 +113,7 @@ cache* alloc_cache()
 		cache->cache[i].dirty_bit = false;
 	}
 	cache->lru_size = 0;
+	cache->gdl_size = 0;
 	cache->pci = malloc(sizeof(struct PCI_HM));
 	for (int i=0; i<HASHMAP_SIZE; i++)
 	{
@@ -116,6 +133,10 @@ cache* alloc_cache()
 
 void free_cache(cache *cache)
 {
+	for (int i=cache->gdl_size; i>0; i--)
+	{
+		gdl_pop(cache, cache->gdl);
+	}
 	for (int i=0; i<HASHMAP_SIZE; i++)
 	{
 		DL_HM_LL *hmlist = cache->dirty_list->HashMap[i];
@@ -141,7 +162,7 @@ void free_cache(cache *cache)
 		printf("Popping cache index %d from free list.\n", cache->free_list->index);
 		cache->free_list = fl_pop(cache->free_list);
 	}
-	for (int i=cache->lru_size; i>0; i--, cache->lru_size--)
+	for (int i=cache->lru_size; i>0; i--)
 	{
 		lru_pop(cache, cache->lru);
 	}
