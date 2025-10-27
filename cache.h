@@ -23,8 +23,8 @@ typedef struct cache_entry_t
 
 typedef struct cache
 {
-	uint64_t cache_size;
-	uint64_t lru_size;
+	int cache_size;
+	int lru_size;
 	cache_entry_t *cache;
 	PCI_HM *pci;
 	LRU_List *lru;
@@ -42,6 +42,8 @@ get_block(DiskInterface* disk, cache *cache, uint64_t inum, uint64_t pnum);
 
 void
 write_block(DiskInterface* disk, cache *cache, void *buf, uint64_t inum, uint64_t pnum);
+
+void cache_fsync(DiskInterface* disk, cache *cache, uint64_t inum);
 
 cache*
 alloc_cache();
