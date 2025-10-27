@@ -60,6 +60,7 @@ write_block(DiskInterface* disk, cache *cache, void *buf, uint64_t inum, uint64_
 	cache->cache[index].dirty_bit = true;
 	if (block_type==BLOCK_TYPE_DATA) dl_insert(cache->dirty_list, inum, pnum);
 	cache->gdl = gdl_push(cache, index);
+	cache->cache[index].gdl_pos = cache->gdl;
 }
 
 void cache_fsync(DiskInterface* disk, cache *cache, uint64_t inum)
