@@ -15,7 +15,8 @@ DL_LL *dl_push(DL_LL *list, uint64_t block_number)
 
 DL_LL *dl_pop(DL_LL *list)
 {
-	DL_LL *temp = list->next;
+	DL_LL *temp=NULL;
+	if (list!=NULL) temp = list->next;
 	
 	arc4random_buf(list, sizeof(struct DL_LL));
 	

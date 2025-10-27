@@ -6,7 +6,7 @@ FL_LL *fl_push(FL_LL *list, int index)
 	FL_LL *node = (FL_LL*)malloc(sizeof(FL_LL));
 	node->index = index;
 	
-	if (list) node->next = list;
+	node->next = list;
 	
 	return node;
 }

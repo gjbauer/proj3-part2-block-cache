@@ -88,11 +88,13 @@ void cache_sync(DiskInterface* disk, cache *cache)
 	while (curr!=NULL)
 	{
 		int index = cache->gdl->index;
+		block_type_t *block_type = (block_type_t*)cache->cache[index].page_data;
 		memcpy(disk_get_block(disk, cache->cache[index].block_number), cache->cache[index].page_data, BLOCK_SIZE);
 		curr=curr->next;
 		gdl_pop(cache, cache->gdl);
 		cache->cache[index].dirty_bit=false;
 		cache->cache[index].gdl_pos=NULL;
+		if (block_type==BLOCK_TYPE_DATA) dl_remove_block(cache->dirty_list, cache->cache[index].inode_number, cache->cache[index].block_number);
 	}
 }
 
@@ -124,6 +126,7 @@ cache* alloc_cache()
 	{
 		cache->dirty_list->HashMap[i] = NULL;
 	}
+	cache->free_list=NULL;
 	for (int i=0; i<cache_size; i++) {
 		printf("Pushing cache index %d to free list.\n", i);
 		cache->free_list = fl_push(cache->free_list, i);
@@ -141,7 +144,7 @@ void free_cache(cache *cache)
 	{
 		DL_HM_LL *hmlist = cache->dirty_list->HashMap[i];
 		DL_HM_LL *prev;
-		while (hmlist)
+		while (hmlist!=NULL)
 		{
 			prev = hmlist;
 			DL_LL *list;
