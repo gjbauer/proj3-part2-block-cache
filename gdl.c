@@ -8,11 +8,13 @@
 GDL *gdl_push(cache *cache, int index)
 {
 	GDL *list = cache->gdl;
+	// Allocate new node
 	GDL *node = (GDL*)malloc(sizeof(GDL));
 	node->index = index;
 	
 	if (cache->gdl_size>0)
 	{
+		// Insert into existing circular doubly-linked list
 		node->next = list;
 		node->prev = list->prev;
 		list->prev = node;
@@ -20,6 +22,7 @@ GDL *gdl_push(cache *cache, int index)
 	}
 	else
 	{
+		// First node - no circular links yet
 		node->next = NULL;
 		node->prev = NULL;
 	}
@@ -35,9 +38,11 @@ void gdl_pop(cache *cache, GDL *list)
 	int index = index = list->index;
 	
 	GDL *temp = list;
+	// Update neighboring nodes to bypass this node
 	if (list->prev) list->prev->next = list->next;
 	if (list->next) list->next->prev = list->prev;
 	
+	// Securely overwrite node data before freeing
 	arc4random_buf(temp, sizeof(struct GDL));
 	free(temp);
 	
