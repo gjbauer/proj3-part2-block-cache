@@ -2,6 +2,9 @@
 #include "lru.h"
 #include "cache.h"
 
+// Add a cache entry index to the head of the LRU (Least Recently Used) list
+// The LRU list tracks cache usage order for eviction decisions
+// Returns pointer to the new LRU node
 LRU_List *lru_push(cache *cache, int index)
 {
 	LRU_List *list = cache->lru;
@@ -25,6 +28,9 @@ LRU_List *lru_push(cache *cache, int index)
 	return node;
 }
 
+// Remove the least recently used entry from the LRU list
+// Returns the cache entry index of the evicted item
+// Securely wipes the removed node before freeing
 int64_t lru_pop(cache *cache, LRU_List *list)
 {
 	int index = (list->prev) ? (list->prev->index) : (index = list->index);

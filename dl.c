@@ -3,6 +3,8 @@
 #include <bsd/stdlib.h>
 #include "dl.h"
 
+// Add a block number to a dirty list
+// Returns the new head of the list
 DL_LL *dl_push(DL_LL *list, uint64_t block_number)
 {
 	DL_LL *node = (DL_LL*)malloc(sizeof(DL_LL));
@@ -13,6 +15,8 @@ DL_LL *dl_push(DL_LL *list, uint64_t block_number)
 	return node;
 }
 
+// Remove the head of a dirty list
+// Securely wipes the removed node before freeing
 DL_LL *dl_pop(DL_LL *list)
 {
 	DL_LL *temp = list->next;
@@ -24,6 +28,8 @@ DL_LL *dl_pop(DL_LL *list)
 	return temp;
 }
 
+// Look up an inode's dirty list in the dirty list hashmap
+// Returns pointer to the inode's dirty list entry, or NULL if not found
 DL_HM_LL *dl_lookup(DL_HM *hashmap, uint64_t inode_number)
 {
 	DL_HM_LL *current;
@@ -39,6 +45,8 @@ DL_HM_LL *dl_lookup(DL_HM *hashmap, uint64_t inode_number)
 	return NULL;
 }
 
+// Find a specific block number in a dirty list
+// Returns pointer to the list node containing the block, or NULL if not found
 DL_LL *dl_find_block(DL_LL *list, uint64_t block_number)
 {
 	DL_LL *curr = list;
@@ -51,6 +59,8 @@ DL_LL *dl_find_block(DL_LL *list, uint64_t block_number)
 	return NULL;
 }
 
+// Insert a dirty block into the dirty list for a specific inode
+// Creates a new inode entry if it doesn't exist, or adds to existing list
 void dl_insert(DL_HM *hashmap, uint64_t inode_number, uint64_t block_number)
 {
 	DL_HM_LL *node = dl_lookup(hashmap, inode_number);
@@ -72,6 +82,8 @@ void dl_insert(DL_HM *hashmap, uint64_t inode_number, uint64_t block_number)
 	}
 }
 
+// Remove an entire inode's dirty list from the hashmap
+// Called when all dirty blocks for an inode have been written to disk
 void dl_delete(DL_HM *hashmap, uint64_t inode_number)
 {
 	DL_HM_LL *curr = hashmap->HashMap[inode_number % HASHMAP_SIZE];
@@ -98,6 +110,8 @@ void dl_delete(DL_HM *hashmap, uint64_t inode_number)
 	free(curr);
 }
 
+// Remove a specific block from an inode's dirty list
+// If this was the last block, removes the entire inode entry
 void dl_remove_block(DL_HM *hashmap, uint64_t inode_number, uint64_t block_number)
 {
 	DL_HM_LL *list = dl_lookup(hashmap, inode_number);

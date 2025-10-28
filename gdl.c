@@ -2,6 +2,9 @@
 #include "lru.h"
 #include "cache.h"
 
+// Add a cache entry index to the global dirty list (GDL)
+// The GDL tracks all dirty blocks regardless of inode or block type
+// Returns pointer to the new GDL node
 GDL *gdl_push(cache *cache, int index)
 {
 	GDL *list = cache->gdl;
@@ -25,6 +28,8 @@ GDL *gdl_push(cache *cache, int index)
 	return node;
 }
 
+// Remove a specific node from the global dirty list (GDL)
+// Securely wipes the removed node before freeing
 void gdl_pop(cache *cache, GDL *list)
 {
 	int index = index = list->index;
