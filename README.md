@@ -17,6 +17,7 @@ The design is a classic example of balancing **Performance** (via hash maps and 
 | **Doubly-Linked List** (`LRU_List`) | **Eviction Mechanism** | Tracks access recency. Head is MRU, Tail is LRU. Used for selecting a victim block on cache miss. | $\text{O}(1)$ for Eviction Decision (Tail) and Access Update (Move-to-Head) |
 | **Singly-Linked List** (`FL_LL`) | **Free Slot Allocator** | Stores indices of currently unused slots in the Fixed Array. | $\text{O}(1)$ for Allocation and Deallocation (Push/Pop) |
 | **Hash Map 2 (DL)** (`DL_HM`) | **`fsync` Optimizer** | Maps `inode_number` to a list of its associated dirty blocks. Essential for efficient, fine-grained durability. | $\text{O}(1)$ lookup for `fsync` |
+| **Doubly-Linked List 2** (`GDL`) | **`sync` Optimizer** | Tracks all dirty pages in the block cache for efficient filesystem-wide `sync` operations. | $\text{O}(1)$ lookup for `sync` |
 
 ---
 
